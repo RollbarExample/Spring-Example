@@ -59,19 +59,19 @@ public class UserController {
 		}
 		return response;
 	}
-	
+
 	@RequestMapping("/rollbar")
 	public LoginResponse authUser() {
 		setupRollbar();
 		LoginResponse response = new LoginResponse();
 		String test=null;
-		//try {
+		try {
 			test.toString();
-		//} catch (Exception e) {
+		} catch (Exception e) {
 			// TODO: handle exception
-			//rollbar.error(e);
-		//}
-		
+			rollbar.error(e);
+		}
+
 		return response;
 	}
 
@@ -80,7 +80,5 @@ public class UserController {
 				.codeVersion("3b8e920").build();
 		rollbar = new Rollbar(config);
 		rollbar.init(config);
-		// rollbar.error(exception);
-		// rollbar.info("This is an info message");
 	}
 }
