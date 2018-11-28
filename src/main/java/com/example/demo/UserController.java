@@ -65,19 +65,19 @@ public class UserController {
 		setupRollbar();
 		LoginResponse response = new LoginResponse();
 		String test=null;
-		try {
+		//try {
 			test.toString();
-		} catch (Exception e) {
+		//} catch (Exception e) {
 			// TODO: handle exception
-			rollbar.error(e);
-		}
+			//rollbar.error(e);
+		//}
 		
 		return response;
 	}
 
 	private void setupRollbar() {
 		Config config = ConfigBuilder.withAccessToken("ff70890763f540d4819dd0fb1d9d5e40").environment("production")
-				.codeVersion("1.0.0").build();
+				.codeVersion("3b8e920").build();
 		rollbar = new Rollbar(config);
 		rollbar.init(config);
 		// rollbar.error(exception);
