@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<timestamp key="byDay" datePattern="yyyyMMdd'T'HHmmss" />
+	<appender name="STDOUT"
+		class="ch.qos.logback.core.ConsoleAppender">
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>INFO</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+	<!-- <appender name="FILE" class="ch.qos.logback.core.FileAppender"> <file>/home/ankit/log/api-log-${byDay}.txt 
+		</file> <file>/opt/log/api-log-${byDay}.txt </file> <append>true</append> 
+		<encoder> <pattern>%-4relative [%thread] %-5level %logger{35} - %msg%n - 
+		%C - %M</pattern> </encoder> </appender> -->
+	<appender name="PAPERTRAIL"
+		class="ch.qos.logback.classic.net.SyslogAppender">
+	
+		<syslogHost>logs3.papertrailapp.com</syslogHost>
+		<port>52204</port>
+		<facility>USER</facility>
+		<suffixPattern>apidemo:%d{HH:mm:ss.SSS} [%thread] %-5level %logger %msg</suffixPattern>
+	</appender>
+	<root level="debug">
+		<!-- <appender-ref ref="FILE" /> -->
+		<appender-ref ref="PAPERTRAIL" />
+		<appender-ref ref="STDOUT" />
+	</root>
+</configuration>
