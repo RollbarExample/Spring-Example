@@ -65,8 +65,12 @@ public class UserController {
 		setupRollbar();
 		LoginResponse response = new LoginResponse();
 		String test=null;
-		
-
+		try {
+			test.toString();
+		} catch (Exception e) {
+			// TODO: handle exception
+			rollbar.error(e);
+		}
 		return response;
 	}
 
