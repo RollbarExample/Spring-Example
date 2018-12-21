@@ -1,6 +1,7 @@
 package com.example.demo;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 
 import javax.validation.Valid;
 
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.rollbar.api.payload.data.Person;
 import com.rollbar.notifier.Rollbar;
 import com.rollbar.notifier.config.Config;
 import com.rollbar.notifier.config.ConfigBuilder;
@@ -21,9 +23,38 @@ import com.rollbar.notifier.config.ConfigBuilder;
 @RestController
 public class UserController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
+	
+	Rollbar rollbar;
+	
+	@RequestMapping("/rollbar/Testing")
+	public String testing() {
+		setupRollbar();
+		String test = "Test";
+		try {
+			test.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+			 HashMap<String,Object> map=new HashMap<String, Object>();
+			 map.put("Id","123");
+			 map.put("User Name","John Doe");
+			 map.put("Email","john@doe.com");
+			 rollbar.error(e,map);
+			
+			return "Exception : "+e.getMessage();
+		}
+		return "SUCCESS";
+	}
+
+	private void setupRollbar() {
+		Config config = ConfigBuilder.withAccessToken("ff70890763f540d4819dd0fb1d9d5e40").environment("Development")
+				.codeVersion("f930978").build();
+		rollbar = new Rollbar(config);
+		rollbar.init(config);
+
+	}
+
 	@Autowired
 	private UserService repository;
-	Rollbar rollbar;
 
 	@RequestMapping("/auth")
 	public LoginResponse authUser(@RequestHeader(value = "authToken") String authToken) {
@@ -60,7 +91,7 @@ public class UserController {
 		return response;
 	}
 
-	@RequestMapping("/rollbar")
+	@RequestMapping("/rollbar/Production")
 	public LoginResponse authUser() {
 		setupRollbar();
 		LoginResponse response = new LoginResponse();
@@ -73,11 +104,17 @@ public class UserController {
 		}
 		return response;
 	}
-
-	private void setupRollbar() {
-		Config config = ConfigBuilder.withAccessToken("ff70890763f540d4819dd0fb1d9d5e40").environment("production")
-				.codeVersion("3b8e920").build();
-		rollbar = new Rollbar(config);
-		rollbar.init(config);
+	@RequestMapping("/rollbar/Staging")
+	public LoginResponse staging() {
+		setupRollbar();
+		LoginResponse response = new LoginResponse();
+		String[] test= {"Test1"};
+		try {
+			String testString=test[1];
+		} catch (Exception e) {
+			rollbar.error(e);
+		}
+		return response;
 	}
+	
 }
