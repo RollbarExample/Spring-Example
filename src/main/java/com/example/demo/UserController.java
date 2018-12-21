@@ -29,7 +29,7 @@ public class UserController {
 	@RequestMapping("/rollbar/generateError")
 	public String generateError() {
 		setupRollbar();
-		String test = "Test";
+		String test = null;
 		try {
 			test.toString();
 		} catch (Exception e) {
