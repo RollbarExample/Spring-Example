@@ -16,9 +16,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.rollbar.api.payload.data.Person;
+import com.rollbar.api.payload.data.Server;
+import com.rollbar.api.payload.data.body.Body.Builder;
 import com.rollbar.notifier.Rollbar;
 import com.rollbar.notifier.config.Config;
 import com.rollbar.notifier.config.ConfigBuilder;
+import com.rollbar.notifier.provider.Provider;
+import com.rollbar.notifier.provider.server.ServerProvider;
 
 @RestController
 public class UserController {
@@ -41,11 +45,23 @@ public class UserController {
 	}
 
 	private void setupRollbar() {
-		Config config = ConfigBuilder.withAccessToken("ff70890763f540d4819dd0fb1d9d5e40").environment("Development")
-				.codeVersion("f930978").build();
+		
+		Config config = ConfigBuilder.withAccessToken("ff70890763f540d4819dd0fb1d9d5e40")
+				.environment("production")
+				.server(new Provider<Server>() {
+
+					@Override
+					public Server provide() {
+						return new Server.Builder().branch("master")
+								.root("/")
+						        .build();
+					}
+				})
+				.build();
+		
+		
 		rollbar = new Rollbar(config);
 		rollbar.init(config);
-
 	}
 
 }
